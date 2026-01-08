@@ -2,9 +2,7 @@
 
 A comprehensive Raycast extension for real-time Munich public transport (MVG) departure information. Get instant access to U-Bahn, S-Bahn, Tram, and Bus departures with a clean, organized interface.
 
-![MVG Extension Demo](https://via.placeholder.com/800x400/2c2c2c/ffffff?text=MVG+Departures+Extension)
-
-## ✨ Features
+## Features
 
 - **Real-time Departures**: Live departure times with delay information and cancellation alerts
 - **Multi-Transport Support**: U-Bahn, S-Bahn, Tram, and Bus departures in one view
@@ -15,13 +13,6 @@ A comprehensive Raycast extension for real-time Munich public transport (MVG) de
 - **Delay Indicators**: Visual indicators for delays and cancellations
 - **Platform Information**: Platform numbers and absolute departure times
 - **Occupancy Information**: Real-time occupancy levels for vehicles
-
-## 🚀 Installation
-
-1. Open Raycast
-2. Go to Extensions
-3. Search for "MVG Departures" or install from the [Raycast Store](https://raycast.com/extensions)
-4. Install the extension
 
 ## 📖 Usage
 
