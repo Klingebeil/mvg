@@ -133,15 +133,6 @@ assets/
 └── extension-icon.png   # Extension icon
 ```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or open issues for:
-
-- Bug fixes
-- Feature enhancements
-- Documentation improvements
-- Performance optimizations
-
 ## 📝 License
 
 MIT License - see LICENSE file for details.
