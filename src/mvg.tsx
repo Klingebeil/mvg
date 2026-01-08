@@ -325,12 +325,7 @@ export default function Command() {
   };
 
   return (
-    <List
-      isLoading={isLoading}
-      searchBarPlaceholder="Search departures..."
-      navigationTitle={`MVG Departures - ${selectedStation.name}`}
-      searchBarAccessory={<StationDropdown />}
-    >
+    <List isLoading={isLoading} searchBarPlaceholder="Search departures..." searchBarAccessory={<StationDropdown />}>
       {departures.length === 0 && !isLoading ? (
         <List.EmptyView
           title="No departures found"

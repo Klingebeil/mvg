@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "mvg",
-  "title": "MVG",
-  "description": "Quickly pulls up MVG departure times",
+  "title": "MVG Departures",
+  "description": "Real-time Munich public transport departure times",
   "icon": "extension-icon.png",
   "author": "johannes_klingebiel",
   "platforms": [
@@ -17,6 +17,9 @@
       "description": "Show departure times for MVG public transport",
       "mode": "view"
     }
+  ],
+  "categories": [
+    "Productivity"
   ],
   "dependencies": {
     "@raycast/api": "^1.104.1",
