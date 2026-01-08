@@ -72,7 +72,7 @@ function getLineIcon(label: string, transportType: string): Icon {
     case "bus":
       return Icon.Car;
     case "tram":
-      return Icon.Tram;
+      return Icon.Train;
     default:
       return Icon.Train;
   }
@@ -193,7 +193,7 @@ export default function Command() {
                 : station.transportTypes?.includes("SBAHN")
                   ? Icon.Train
                   : station.transportTypes?.includes("TRAM")
-                    ? Icon.Tram
+                    ? Icon.Train
                     : Icon.Car
             }
             actions={
@@ -313,7 +313,7 @@ export default function Command() {
                     : station.transportTypes?.includes("SBAHN")
                       ? Icon.Train
                       : station.transportTypes?.includes("TRAM")
-                        ? Icon.Tram
+                        ? Icon.Train
                         : Icon.Car
                 }
               />
