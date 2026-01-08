@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { List, showToast, Toast, Color, Icon, ActionPanel, Action, Form, useNavigation } from "@raycast/api";
+import { List, showToast, Toast, Color, Icon, ActionPanel, Action, useNavigation } from "@raycast/api";
 import { useLocalStorage } from "@raycast/utils";
 
 interface Departure {
@@ -40,13 +40,13 @@ const MVG_LOCATIONS_URL = "https://www.mvg.de/api/bgw-pt/v3/locations";
 
 const DEFAULT_STATION = {
   globalId: "de:09162:2", // Marienplatz main station
-  name: "Marienplatz"
+  name: "Marienplatz",
 };
 
 function formatDepartureTime(timestamp: number): string {
   const now = Date.now();
   const diffInMinutes = Math.floor((timestamp - now) / (1000 * 60));
-  
+
   if (diffInMinutes <= 0) {
     return "Now";
   } else if (diffInMinutes === 1) {
@@ -57,34 +57,21 @@ function formatDepartureTime(timestamp: number): string {
 }
 
 function formatAbsoluteTime(timestamp: number): string {
-  return new Date(timestamp).toLocaleTimeString('de-DE', {
-    hour: '2-digit',
-    minute: '2-digit'
+  return new Date(timestamp).toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
-}
-
-function getOccupancyColor(occupancy: string): Color {
-  switch (occupancy.toLowerCase()) {
-    case 'low':
-      return Color.Green;
-    case 'medium':
-      return Color.Yellow;
-    case 'high':
-      return Color.Red;
-    default:
-      return Color.SecondaryText;
-  }
 }
 
 function getLineIcon(label: string, transportType: string): Icon {
   switch (transportType.toLowerCase()) {
-    case 'ubahn':
+    case "ubahn":
       return Icon.Train;
-    case 'sbahn':
+    case "sbahn":
       return Icon.Train;
-    case 'bus':
+    case "bus":
       return Icon.Car;
-    case 'tram':
+    case "tram":
       return Icon.Tram;
     default:
       return Icon.Train;
@@ -93,14 +80,14 @@ function getLineIcon(label: string, transportType: string): Icon {
 
 function getTransportTypeDisplayName(transportType: string): string {
   switch (transportType.toLowerCase()) {
-    case 'ubahn':
-      return 'U-Bahn';
-    case 'sbahn':
-      return 'S-Bahn';
-    case 'bus':
-      return 'Bus';
-    case 'tram':
-      return 'Tram';
+    case "ubahn":
+      return "U-Bahn";
+    case "sbahn":
+      return "S-Bahn";
+    case "bus":
+      return "Bus";
+    case "tram":
+      return "Tram";
     default:
       return transportType;
   }
@@ -108,17 +95,19 @@ function getTransportTypeDisplayName(transportType: string): string {
 
 export default function Command() {
   const { push, pop } = useNavigation();
-  const { value: homeStation, setValue: setHomeStation } = useLocalStorage<UserStation>("mvg-home-station", DEFAULT_STATION);
+  const { value: homeStation, setValue: setHomeStation } = useLocalStorage<UserStation>(
+    "mvg-home-station",
+    DEFAULT_STATION,
+  );
   const { value: workStation, setValue: setWorkStation } = useLocalStorage<UserStation>("mvg-work-station", {
     globalId: "de:09162:1",
-    name: "Hauptbahnhof"
+    name: "Hauptbahnhof",
   });
-  
+
   const [departures, setDepartures] = useState<Departure[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
   const [selectedStation, setSelectedStation] = useState(homeStation || DEFAULT_STATION);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Station setting handlers
@@ -127,7 +116,7 @@ export default function Command() {
     showToast({
       style: Toast.Style.Success,
       title: "Home Station Set",
-      message: `Set ${station.name} as your home station`
+      message: `Set ${station.name} as your home station`,
     });
     pop();
   };
@@ -137,14 +126,17 @@ export default function Command() {
     showToast({
       style: Toast.Style.Success,
       title: "Work Station Set",
-      message: `Set ${station.name} as your work station`
+      message: `Set ${station.name} as your work station`,
     });
     pop();
   };
 
   // Station selection component
-  function StationSelectionForm({ stationType, onStationSelected }: { 
-    stationType: "home" | "work"; 
+  function StationSelectionForm({
+    stationType,
+    onStationSelected,
+  }: {
+    stationType: "home" | "work";
     onStationSelected: (station: UserStation) => void;
   }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -165,11 +157,11 @@ export default function Command() {
           setSearchResults(results.slice(0, 10));
         }
       } catch (error) {
-        console.error('Error searching stations:', error);
+        console.error("Error searching stations:", error);
         showToast({
           style: Toast.Style.Failure,
           title: "Search failed",
-          message: "Unable to search for stations"
+          message: "Unable to search for stations",
         });
       } finally {
         setIsLoading(false);
@@ -196,9 +188,13 @@ export default function Command() {
             title={station.name}
             subtitle={station.place}
             icon={
-              station.transportTypes?.includes("UBAHN") ? Icon.Train :
-              station.transportTypes?.includes("SBAHN") ? Icon.Train :
-              station.transportTypes?.includes("TRAM") ? Icon.Tram : Icon.Car
+              station.transportTypes?.includes("UBAHN")
+                ? Icon.Train
+                : station.transportTypes?.includes("SBAHN")
+                  ? Icon.Train
+                  : station.transportTypes?.includes("TRAM")
+                    ? Icon.Tram
+                    : Icon.Car
             }
             actions={
               <ActionPanel>
@@ -207,7 +203,7 @@ export default function Command() {
                   onAction={() => {
                     const userStation: UserStation = {
                       globalId: station.globalId,
-                      name: station.name
+                      name: station.name,
                     };
                     onStationSelected(userStation);
                   }}
@@ -217,10 +213,7 @@ export default function Command() {
           />
         ))}
         {searchQuery && searchResults.length === 0 && !isLoading && (
-          <List.EmptyView
-            title="No stations found"
-            description={`Try searching with a different term`}
-          />
+          <List.EmptyView title="No stations found" description={`Try searching with a different term`} />
         )}
       </List>
     );
@@ -232,20 +225,20 @@ export default function Command() {
       setStations([]);
       return;
     }
-    
+
     try {
       const response = await fetch(`${MVG_LOCATIONS_URL}?query=${encodeURIComponent(query)}`);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const data: Station[] = await response.json();
-      setStations(data.filter(station => station.type === "STATION"));
+      setStations(data.filter((station) => station.type === "STATION"));
     } catch (error) {
       console.error("Failed to search stations:", error);
       showToast({
         style: Toast.Style.Failure,
         title: "Failed to search stations",
-        message: error instanceof Error ? error.message : "Unknown error occurred"
+        message: error instanceof Error ? error.message : "Unknown error occurred",
       });
     }
   };
@@ -255,21 +248,19 @@ export default function Command() {
       setIsLoading(true);
       const url = `${MVG_DEPARTURES_URL}?globalId=${selectedStation.globalId}&limit=20&transportTypes=UBAHN,SBAHN,BUS,TRAM&offsetInMinutes=5`;
       const response = await fetch(url);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       const data: Departure[] = await response.json();
       setDepartures(data);
-      setLastUpdated(new Date());
-      
     } catch (error) {
       console.error("Failed to fetch departures:", error);
       showToast({
         style: Toast.Style.Failure,
         title: "Failed to load departures",
-        message: error instanceof Error ? error.message : "Unknown error occurred"
+        message: error instanceof Error ? error.message : "Unknown error occurred",
       });
     } finally {
       setIsLoading(false);
@@ -278,7 +269,7 @@ export default function Command() {
 
   useEffect(() => {
     fetchDepartures();
-    
+
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchDepartures, 30000);
     return () => clearInterval(interval);
@@ -286,15 +277,16 @@ export default function Command() {
 
   const StationDropdown = () => {
     const showUserStations = !searchQuery.trim();
-    
+
     return (
       <List.Dropdown
         tooltip="Select Station"
         value={selectedStation.globalId}
         onChange={(newValue) => {
-          const station = stations.find(s => s.globalId === newValue) ||
-                         (newValue === homeStation?.globalId ? homeStation : null) ||
-                         (newValue === workStation?.globalId ? workStation : null);
+          const station =
+            stations.find((s) => s.globalId === newValue) ||
+            (newValue === homeStation?.globalId ? homeStation : null) ||
+            (newValue === workStation?.globalId ? workStation : null);
           if (station) {
             setSelectedStation({ globalId: station.globalId, name: station.name });
           }
@@ -304,16 +296,8 @@ export default function Command() {
       >
         {showUserStations && homeStation && workStation && (
           <List.Dropdown.Section title="Quick Access">
-            <List.Dropdown.Item 
-              title={homeStation.name} 
-              value={homeStation.globalId}
-              icon={Icon.House}
-            />
-            <List.Dropdown.Item 
-              title={workStation.name} 
-              value={workStation.globalId}
-              icon={Icon.Building}
-            />
+            <List.Dropdown.Item title={homeStation.name} value={homeStation.globalId} icon={Icon.House} />
+            <List.Dropdown.Item title={workStation.name} value={workStation.globalId} icon={Icon.Building} />
           </List.Dropdown.Section>
         )}
         {stations.length > 0 && (
@@ -323,9 +307,15 @@ export default function Command() {
                 key={station.globalId}
                 title={station.name}
                 value={station.globalId}
-                icon={station.transportTypes?.includes("UBAHN") ? Icon.Train : 
-                      station.transportTypes?.includes("SBAHN") ? Icon.Train :
-                      station.transportTypes?.includes("TRAM") ? Icon.Tram : Icon.Car}
+                icon={
+                  station.transportTypes?.includes("UBAHN")
+                    ? Icon.Train
+                    : station.transportTypes?.includes("SBAHN")
+                      ? Icon.Train
+                      : station.transportTypes?.includes("TRAM")
+                        ? Icon.Tram
+                        : Icon.Car
+                }
               />
             ))}
           </List.Dropdown.Section>
@@ -342,53 +332,53 @@ export default function Command() {
       searchBarAccessory={<StationDropdown />}
     >
       {departures.length === 0 && !isLoading ? (
-        <List.EmptyView 
-          title="No departures found" 
+        <List.EmptyView
+          title="No departures found"
           description="No upcoming departures available at this station"
           icon={Icon.Train}
           actions={
             <ActionPanel>
               <ActionPanel.Section title="Station Settings">
-                <Action 
+                <Action
                   title="Set Home Station"
                   icon={Icon.House}
-                  onAction={() => push(<StationSelectionForm stationType="home" onStationSelected={handleSetHomeStation} />)}
+                  onAction={() =>
+                    push(<StationSelectionForm stationType="home" onStationSelected={handleSetHomeStation} />)
+                  }
                 />
-                <Action 
+                <Action
                   title="Set Work Station"
                   icon={Icon.Building}
-                  onAction={() => push(<StationSelectionForm stationType="work" onStationSelected={handleSetWorkStation} />)}
+                  onAction={() =>
+                    push(<StationSelectionForm stationType="work" onStationSelected={handleSetWorkStation} />)
+                  }
                 />
               </ActionPanel.Section>
               <ActionPanel.Section title="Refresh">
-                <Action 
-                  title="Refresh Departures"
-                  icon={Icon.ArrowClockwise}
-                  onAction={fetchDepartures}
-                />
+                <Action title="Refresh Departures" icon={Icon.ArrowClockwise} onAction={fetchDepartures} />
               </ActionPanel.Section>
             </ActionPanel>
           }
         />
       ) : (
         // Group departures by transport type
-        ['UBAHN', 'SBAHN', 'TRAM', 'BUS'].map(transportType => {
-          const transportDepartures = departures.filter(d => d.transportType === transportType);
-          
+        ["UBAHN", "SBAHN", "TRAM", "BUS"].map((transportType) => {
+          const transportDepartures = departures.filter((d) => d.transportType === transportType);
+
           if (transportDepartures.length === 0) return null;
 
           return (
-            <List.Section 
-              key={transportType} 
+            <List.Section
+              key={transportType}
               title={getTransportTypeDisplayName(transportType)}
-              subtitle={`${transportDepartures.length} departure${transportDepartures.length === 1 ? '' : 's'}`}
+              subtitle={`${transportDepartures.length} departure${transportDepartures.length === 1 ? "" : "s"}`}
             >
               {transportDepartures.map((departure, index) => {
                 const departureTime = formatDepartureTime(departure.realtimeDepartureTime);
                 const absoluteTime = formatAbsoluteTime(departure.realtimeDepartureTime);
                 const isDelayed = departure.delayInMinutes > 0;
                 const isCancelled = departure.cancelled;
-                
+
                 let subtitle = `Platform ${departure.platform} • ${absoluteTime}`;
                 if (isDelayed) {
                   subtitle += ` • +${departure.delayInMinutes} min delay`;
@@ -406,7 +396,7 @@ export default function Command() {
                   {
                     text: departureTime,
                     icon: Icon.Clock,
-                    tooltip: `Departure: ${absoluteTime}${isDelayed ? ` (+${departure.delayInMinutes} min)` : ''}`,
+                    tooltip: `Departure: ${absoluteTime}${isDelayed ? ` (+${departure.delayInMinutes} min)` : ""}`,
                   },
                 ];
 
@@ -423,23 +413,23 @@ export default function Command() {
                     actions={
                       <ActionPanel>
                         <ActionPanel.Section title="Station Settings">
-                          <Action 
+                          <Action
                             title="Set Home Station"
                             icon={Icon.House}
-                            onAction={() => push(<StationSelectionForm stationType="home" onStationSelected={handleSetHomeStation} />)}
+                            onAction={() =>
+                              push(<StationSelectionForm stationType="home" onStationSelected={handleSetHomeStation} />)
+                            }
                           />
-                          <Action 
+                          <Action
                             title="Set Work Station"
                             icon={Icon.Building}
-                            onAction={() => push(<StationSelectionForm stationType="work" onStationSelected={handleSetWorkStation} />)}
+                            onAction={() =>
+                              push(<StationSelectionForm stationType="work" onStationSelected={handleSetWorkStation} />)
+                            }
                           />
                         </ActionPanel.Section>
                         <ActionPanel.Section title="Refresh">
-                          <Action 
-                            title="Refresh Departures"
-                            icon={Icon.ArrowClockwise}
-                            onAction={fetchDepartures}
-                          />
+                          <Action title="Refresh Departures" icon={Icon.ArrowClockwise} onAction={fetchDepartures} />
                         </ActionPanel.Section>
                       </ActionPanel>
                     }

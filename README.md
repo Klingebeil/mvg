@@ -143,14 +143,6 @@ MIT License - see LICENSE file for details.
 - [Raycast](https://raycast.com/) for the excellent extension platform
 - Munich public transport users for feedback and testing
 
-## 📞 Support
-
-If you encounter any issues or have feature requests:
-
-1. Check existing [GitHub issues](https://github.com/your-username/mvg-raycast-extension/issues)
-2. Create a new issue with detailed information
-3. Contact via [your-email@example.com](mailto:your-email@example.com)
-
 ---
 
 **Note**: This extension is not officially affiliated with MVG or Münchner Verkehrsgesellschaft. It uses publicly available APIs to provide departure information.
